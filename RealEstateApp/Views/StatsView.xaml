@@ -1,0 +1,176 @@
+﻿<UserControl x:Class="RealEstateApp.Views.StatsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RealEstateApp.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <DockPanel x:Name="UsersContainer">
+        <!--HEADER-->
+        <StackPanel DockPanel.Dock="Top">
+            <Label Content="Статистика" HorizontalAlignment="Center" FontWeight="ExtraBold" FontSize="20"/>
+            <!--TOOLBAR-->
+            <StackPanel Orientation="Horizontal">
+            </StackPanel>
+        </StackPanel>
+        <!--CONTENT-->
+        <Grid Width="300" Margin="0,50,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="1"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="1"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="1"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <!--APPS-->
+            <Grid Grid.Row="0" Background="Black"/>
+            <Grid Grid.Row="1" Width="300" Margin="10,20,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
+                           Text="Аппартаменты : " HorizontalAlignment="Left"/>
+                <TextBlock Grid.Row="1" Grid.Column="0" Margin="20,0,0,0"
+                           Text="Всего : " HorizontalAlignment="Left"/>
+                <TextBlock Grid.Row="2" Grid.Column="0" Margin="20,0,0,0"
+                           Text="Свободно : " HorizontalAlignment="Left"/>
+                <TextBlock Grid.Row="3" Grid.Column="0" Margin="20,0,0,0"
+                           Text="Забронировано : " HorizontalAlignment="Left"/>
+                <TextBlock Grid.Row="4" Grid.Column="0" Margin="20,0,0,0"
+                           Text="Выкуплено : " HorizontalAlignment="Left"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="1"
+                           HorizontalAlignment="Left"
+                           Text="{Binding TotalApps}"/>
+                <TextBlock Grid.Row="2" Grid.Column="1"
+                           HorizontalAlignment="Left"
+                           Text="{Binding AvailableApps}"/>
+                <TextBlock Grid.Row="3" Grid.Column="1"
+                           HorizontalAlignment="Left"
+                           Text="{Binding ReservedApps}"/>
+                <TextBlock Grid.Row="4" Grid.Column="1"
+                           HorizontalAlignment="Left"
+                           Text="{Binding ConfirmedApps}"/>
+            </Grid>
+            <!--END APPS-->
+            
+            <!--CLIENTS-->
+            <Grid Grid.Row="2" Background="Black"/>
+            <Grid Grid.Row="3" Width="300" Margin="10,20,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
+                           Text="Клиенты : " HorizontalAlignment="Left"/>
+                <TextBlock Grid.Row="1" Grid.Column="0" Margin="20,0,0,0"
+                           Text="Всего : " HorizontalAlignment="Left"/>
+                <TextBlock Grid.Row="2" Grid.Column="0" Margin="20,0,0,0"
+                           Text="Активных : " HorizontalAlignment="Left"/>
+                <TextBlock Grid.Row="3" Grid.Column="0" Margin="20,0,0,0"
+                           Text="Без заказов : " HorizontalAlignment="Left"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="1"
+                           HorizontalAlignment="Left"
+                           Text="{Binding TotalClients}"/>
+                <TextBlock Grid.Row="2" Grid.Column="1"
+                           HorizontalAlignment="Left"
+                           Text="{Binding ActiveClients}"/>
+                <TextBlock Grid.Row="3" Grid.Column="1"
+                           HorizontalAlignment="Left"
+                           Text="{Binding InactiveClients}"/>
+            </Grid>
+            <!--END CLIENTS-->
+            
+            <!--DEALS-->
+            <Grid Grid.Row="4" Background="Black"/>
+            <Grid Grid.Row="5" Width="300" Margin="10,20,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
+                           Text="Сделки : " HorizontalAlignment="Left"/>
+                <TextBlock Grid.Row="1" Grid.Column="0" Margin="20,0,0,0"
+                           Text="Всего : " HorizontalAlignment="Left"/>
+                <TextBlock Grid.Row="2" Grid.Column="0" Margin="20,0,0,0"
+                           Text="Открытых : " HorizontalAlignment="Left"/>
+                <TextBlock Grid.Row="3" Grid.Column="0" Margin="20,0,0,0"
+                           Text="Закрытых : " HorizontalAlignment="Left"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="1"
+                           HorizontalAlignment="Left"
+                           Text="{Binding TotalDeals}"/>
+                <TextBlock Grid.Row="2" Grid.Column="1"
+                           HorizontalAlignment="Left"
+                           Text="{Binding ReservedDeals}"/>
+                <TextBlock Grid.Row="3" Grid.Column="1"
+                           HorizontalAlignment="Left"
+                           Text="{Binding ConfirmedDeals}"/>
+            </Grid>
+            <!--END DEALS-->
+            
+            <!--SUM-->
+            <Grid Grid.Row="6" Background="Black"/>
+            <Grid Grid.Row="7" Width="300" Margin="10,20,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
+                           Text="Сумма : " HorizontalAlignment="Left"/>
+                <TextBlock Grid.Row="1" Grid.Column="0" Margin="20,0,0,0"
+                           Text="Всего : " HorizontalAlignment="Left"/>
+                <TextBlock Grid.Row="2" Grid.Column="0" Margin="20,0,0,0"
+                           Text="Открытых : " HorizontalAlignment="Left"/>
+                <TextBlock Grid.Row="3" Grid.Column="0" Margin="20,0,0,0"
+                           Text="Закрытых : " HorizontalAlignment="Left"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+                           HorizontalAlignment="Left"
+                           Text="{Binding TotalSum}"/>
+                <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"
+                           HorizontalAlignment="Left"
+                           Text="{Binding ReservedSum}"/>
+                <TextBlock Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"
+                           HorizontalAlignment="Left"
+                           Text="{Binding ConfirmedSum}"/>
+            </Grid>
+            <!--END SUM-->
+        </Grid>
+        </DockPanel>
+</UserControl>

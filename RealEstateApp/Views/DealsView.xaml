@@ -1,0 +1,580 @@
+﻿<UserControl x:Class="RealEstateApp.Views.DealsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RealEstateApp.Views"
+             
+                        
+             xmlns:converters="clr-namespace:RealEstateApp.Converters"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             
+             
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <DockPanel x:Name="DealsContainer">
+        <!--HEADER-->
+        <StackPanel DockPanel.Dock="Top">
+            <Label Content="Сделки" HorizontalAlignment="Center" FontWeight="ExtraBold" FontSize="20"/>
+            <!--TOOLBAR-->
+            <Grid Width="920" Height="40" Visibility="{Binding ToolBarVisibility}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0"
+                        HorizontalAlignment="Center" Margin="20,0"
+                        Content="Показать все" Width="120" Height="30"
+                        Command="{Binding SortCommand}"/>
+                <Button Grid.Column="2"
+                        HorizontalAlignment="Center" Margin="20,0"
+                        Content="Забронированные" Width="120" Height="30"
+                        Command="{Binding SortCommand}">
+                    <Button.CommandParameter>
+                        <system:Boolean>False</system:Boolean>
+                    </Button.CommandParameter>
+                </Button>
+                <Button Grid.Column="3"
+                        HorizontalAlignment="Center" Margin="20,0"
+                        Content="Выкупленные" Width="120" Height="30"
+                        Command="{Binding SortCommand}">
+                    <Button.CommandParameter>
+                        <system:Boolean>True</system:Boolean>
+                    </Button.CommandParameter>
+                </Button>
+            </Grid>
+            <!--REGISTER-->
+            <Grid Background="Black" Width="200" Margin="0,20">
+                <Border BorderThickness="1" BorderBrush="Black" CornerRadius="5">
+                    <Button Command="{Binding ShowCommand}">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Width="20">
+                                <Image.Source>
+                                    <BitmapImage DecodePixelWidth="20" DecodePixelHeight="20"
+                                                 UriSource="/Images/Deal.png"/>
+                                </Image.Source>
+                            </Image>
+                            <Label Content="Заключить сделку" HorizontalAlignment="Center" FontWeight="Bold"/>
+                        </StackPanel>
+                    </Button>
+                </Border>
+            </Grid>
+        </StackPanel>
+        <!--CONTENT-->
+        <Grid>
+            <!--LIST-->
+            <Grid Width="920" HorizontalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <!--HEADER-->
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="120"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="1" Text="Адресс" HorizontalAlignment="Left"/>
+                    <TextBlock Grid.Column="2" Text="Клиент" HorizontalAlignment="Left"/>
+                    <TextBlock Grid.Column="3" Text="Цена" HorizontalAlignment="Left"/>
+                    <TextBlock Grid.Column="4" Text="Статус" HorizontalAlignment="Left"/>
+                </Grid>
+                <!--ROWS-->
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden" Margin="0,20" Width="920">
+                    <ItemsControl ItemsSource="{Binding Deals}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Height="30" Margin="0,3"
+                                        Command="{Binding ElementName=application, Path=DealsVM.ShowCommand}" CommandParameter="{Binding}">
+                                    <Button.Content>
+                                        <Grid Width="920">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*"/>
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="20"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="120"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Appartment.Address}" HorizontalAlignment="Left"/>
+                                            <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Left">
+                                                <TextBlock Text="{Binding Client.FirstName}"/>
+                                                <TextBlock Text="{Binding Client.LastName}" Margin="5,0"/>
+                                                <TextBlock Text="{Binding Client.MiddleName}"/>
+                                            </StackPanel>
+                                            <TextBlock Grid.Row="0" Grid.Column="3" Text="{Binding Appartment.Price}" HorizontalAlignment="Left"/>
+                                            <TextBlock Grid.Row="0" Grid.Column="4" HorizontalAlignment="Left"
+                                                       Text="{Binding IsConfirmed,Converter={x:Static converters:ReservedConfirmedToBooleanConverter.Instance}}"/>
+                                        </Grid>
+                                    </Button.Content>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+            
+            <!--MODAL-->
+            <Grid Visibility="{Binding SelectedDealVisibility}" Background="Silver" VerticalAlignment="Stretch">
+                <Grid Width="920" Margin="0,30" VerticalAlignment="Top">
+                    <!--EXISTING DEAL-->
+                    <Grid Visibility="{Binding ExistingDealVisibility}" Background="Silver">
+                        <Grid Height="322">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="1"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="1"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="1"/>
+                                <RowDefinition Height="80"/>
+                            </Grid.RowDefinitions>
+                            <!--HEADER-->
+                            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                               VerticalAlignment="Center" FontWeight="Bold" Margin="5,0"
+                               HorizontalAlignment="Left" Text="Квартира "/>
+                            <TextBlock Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="2"
+                               VerticalAlignment="Center" FontWeight="Bold" Margin="10,0"
+                               HorizontalAlignment="Left" Text="Клиент "/>
+                            <Grid Grid.Row="0" Grid.Column="2" Grid.RowSpan="9" Background="Black"/>
+                            <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" Background="Black"/>
+                            <Grid Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="5" Background="Black"/>
+                            <!--APPARTMENT HEADER-->
+                            <TextBlock Grid.Row="2" Grid.Column="0"
+                               VerticalAlignment="Center" Margin="5,0"
+                               HorizontalAlignment="Left" Text="Адресс : "/>
+                            <TextBlock Grid.Row="3" Grid.Column="0" 
+                               VerticalAlignment="Center" Margin="5,0"
+                               HorizontalAlignment="Left" Text="Комнат : "/>
+                            <TextBlock Grid.Row="4" Grid.Column="0"
+                               VerticalAlignment="Center" Margin="5,0"
+                               HorizontalAlignment="Left" Text="Площадь : "/>
+                            <TextBlock Grid.Row="5" Grid.Column="0"
+                               VerticalAlignment="Center" Margin="5,0"
+                               HorizontalAlignment="Left" Text="Этаж : "/>
+                            <TextBlock Grid.Row="6" Grid.Column="0"
+                               VerticalAlignment="Center" Margin="5,0"
+                               HorizontalAlignment="Left" Text="Цена : "/>
+                            <!--END APPARTMENT HEADER-->
+
+                            <!--CLIENT HEADER-->
+                            <TextBlock Grid.Row="2" Grid.Column="3"
+                               VerticalAlignment="Center" Margin="10,0"
+                               HorizontalAlignment="Left" Text="Имя : "/>
+                            <TextBlock Grid.Row="3" Grid.Column="3" 
+                               VerticalAlignment="Center" Margin="10,0"
+                               HorizontalAlignment="Left" Text="Фамилия : "/>
+                            <TextBlock Grid.Row="4" Grid.Column="3"
+                               VerticalAlignment="Center" Margin="10,0"
+                               HorizontalAlignment="Left" Text="Отчество : "/>
+                            <TextBlock Grid.Row="5" Grid.Column="3"
+                               VerticalAlignment="Center" Margin="10,0"
+                               HorizontalAlignment="Left" Text="Телефон : "/>
+                            <!--END CLIENT HEADER-->
+                            <TextBlock Grid.Row="8" Grid.Column="0"
+                                   VerticalAlignment="Center" Margin="10,0"
+                                   HorizontalAlignment="Left" Text="Статус : "/>
+                            <!--END HEADER-->
+
+                            <!--BODY-->
+                            <!--APPARTMENT BODY-->
+                            <TextBlock Grid.Row="2" Grid.Column="1" 
+                             VerticalAlignment="Center" FontSize="12" FontWeight="Bold" Margin="20,0"
+                             Text="{Binding SelectedDeal.Appartment.Address}"/>
+                            <TextBlock Grid.Row="3" Grid.Column="1" 
+                             VerticalAlignment="Center" FontSize="12" FontWeight="Bold" Margin="20,0"
+                             Text="{Binding SelectedDeal.Appartment.RoomsAmount}"/>
+                            <TextBlock Grid.Row="4" Grid.Column="1" 
+                             VerticalAlignment="Center" FontSize="12" FontWeight="Bold" Margin="20,0"
+                             Text="{Binding SelectedDeal.Appartment.Area}"/>
+                            <TextBlock Grid.Row="5" Grid.Column="1" 
+                             VerticalAlignment="Center" FontSize="12" FontWeight="Bold" Margin="20,0"
+                             Text="{Binding SelectedDeal.Appartment.Storey}"/>
+                            <TextBlock Grid.Row="6" Grid.Column="1" 
+                             VerticalAlignment="Center" FontSize="12" FontWeight="Bold" Margin="20,0"
+                             Text="{Binding SelectedDeal.Appartment.Price}"/>
+                            <!--END APPARTMENT BODY-->
+
+                            <!--CLIENT BODY-->
+                            <TextBlock Grid.Row="2" Grid.Column="4" 
+                             VerticalAlignment="Center" FontSize="12" FontWeight="Bold" Margin="20,0"
+                             Text="{Binding SelectedDeal.Client.FirstName}"/>
+                            <TextBlock Grid.Row="3" Grid.Column="4" 
+                             VerticalAlignment="Center" FontSize="12" FontWeight="Bold" Margin="20,0"
+                             Text="{Binding SelectedDeal.Client.LastName}"/>
+                            <TextBlock Grid.Row="4" Grid.Column="4" 
+                             VerticalAlignment="Center" FontSize="12" FontWeight="Bold" Margin="20,0"
+                             Text="{Binding SelectedDeal.Client.MiddleName}"/>
+                            <TextBlock Grid.Row="5" Grid.Column="4" 
+                             VerticalAlignment="Center" FontSize="12" FontWeight="Bold" Margin="20,0"
+                             Text="{Binding SelectedDeal.Client.Phone}"/>
+                            <!--END CLIENT BODY-->
+
+                            <!--CHANGE STATUS-->
+                            <ComboBox Grid.Row="8"  Grid.Column="1" Margin="20,29"
+                             SelectedValue="{Binding SelectedDeal.IsConfirmed}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Converter={x:Static converters:ReservedConfirmedToBooleanConverter.Instance}}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                                <ComboBox.Items>
+                                    <system:Boolean>True</system:Boolean>
+                                    <system:Boolean>False</system:Boolean>
+                                </ComboBox.Items>
+                            </ComboBox>
+                            <!--END CHANGE STATUS-->
+
+                            <!--SAVE CANCEL DELETE OPTIONS-->
+                            <DockPanel Grid.Row="8" Grid.Column="3" Grid.ColumnSpan="2"
+                                    VerticalAlignment="Center"
+                                    Height="40">
+
+                                <Button DockPanel.Dock="Left"
+                                    Width="100" Height="30" Content="Подтвердить" Margin="10,0"
+                                    Command="{Binding SaveCommand}" CommandParameter="{Binding SelectedDeal.Id}"/>
+                                <Button DockPanel.Dock="Left"
+                                    Width="100" Height="30" Content="Вернуться"
+                                    Command="{Binding CancelCommand}" CommandParameter="{Binding SelectedDeal.Id}"/>
+                                <Button DockPanel.Dock="Right"
+                                    Width="100" Height="30" Content="Отменить" Margin="10,0"
+                                    Command="{Binding DropCommand}"
+                                    Visibility="{Binding DropDealVisibility}"/>
+                            </DockPanel>
+                            <!--END SAVE CANCEL DELETE OPTIONS-->
+                            <!--END BODY-->
+                        </Grid>
+                    </Grid>
+                    
+                    
+                    <!--NEW DEAL-->
+                    <Grid Visibility="{Binding NewDealVisibility}" Background="Silver">
+                        <Grid Width="920" Height="81">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="1"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="1"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="1"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <!--LINES-->
+                            <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" Background="Black"/>
+                            <Grid Grid.Row="0" Grid.Column="1" Grid.RowSpan="3" Background="Black"/>
+                            <Grid Grid.Row="0" Grid.Column="3" Grid.RowSpan="3" Background="Black"/>
+                            <!--HEADER-->
+                            <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center"
+                                       Text="{Binding SelectedDeal.Appartment.Address}"/>
+                            <StackPanel Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center"
+                                        Orientation="Horizontal">
+                                <TextBlock Text="{Binding SelectedDeal.Client.FirstName}"/>
+                                <TextBlock Text="{Binding SelectedDeal.Client.LastName}" Margin="10,0"/>
+                                <TextBlock Text="{Binding SelectedDeal.Client.MiddleName}"/>
+                            </StackPanel>
+                            <!--CONTROLS-->
+                            <Button Grid.Row="2" Grid.Column="0" Content="Выбрать Аппартаменты" Width="140" Height="30"
+                                    Command="{Binding SelectAppartmentCommand}"/>
+                            <Button Grid.Row="2" Grid.Column="2" Content="Выбрать Клиента" Width="140" Height="30"
+                                    Command="{Binding SelectClientCommand}"/>
+                            <Button Grid.Row="0" Grid.Column="4" Content="Заключить сделку" Width="140" Height="30"
+                                    Command="{Binding SaveCommand}" CommandParameter="{Binding SelectedDeal.Id}"/>
+                            <Button Grid.Row="2" Grid.Column="4" Content="Вернуться к списку" Width="140" Height="30"
+                                    Command="{Binding CancelCommand}" CommandParameter="{Binding SelectedDeal.Id}"/>
+                            
+                        </Grid>
+                        <!--APPARTMENT MODAL-->
+                        <Grid Visibility="{Binding AppartmentVisibility}" Background="Silver">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="1"/>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="1"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="1" Background="Black"/>
+                            <Grid Grid.Row="3" Background="Black"/>
+                            <!--SEARCH-->
+                            <Grid Grid.Row="0" Margin="0,30" Width="920">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0" Grid.Column="0"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Left" Text="Адресс : "/>
+                                <TextBlock Grid.Row="1" Grid.Column="0"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Left" Text="Комнат : "/>
+                                <TextBlock Grid.Row="2" Grid.Column="0"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Left" Text="Площадь : "/>
+                                <TextBlock Grid.Row="0" Grid.Column="2"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Left" Text="Этаж : "/>
+                                <TextBlock Grid.Row="1" Grid.Column="2"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Left" Text="Цена : "/>
+                                <Button Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2"
+                                        HorizontalAlignment="Right" Margin="20,0"
+                                        Content="Найти похожие" Width="120" Height="30"
+                                        Command="{Binding SearchAppartmentCommand}"/>
+
+                                <TextBox Grid.Row="0" Grid.Column="1" 
+                                         VerticalAlignment="Center" FontSize="12" FontWeight="Bold" Margin="20,0"
+                                         Text="{Binding Appartment.Address}"/>
+                                <TextBox Grid.Row="1" Grid.Column="1" 
+                                         VerticalAlignment="Center" FontSize="12" FontWeight="Bold" Margin="20,0"
+                                         Text="{Binding Appartment.RoomsAmount}"/>
+                                <TextBox Grid.Row="2" Grid.Column="1" 
+                                         VerticalAlignment="Center" FontSize="12" FontWeight="Bold" Margin="20,0"
+                                         Text="{Binding Appartment.Area}"/>
+                                <TextBox Grid.Row="0" Grid.Column="3" 
+                                         VerticalAlignment="Center" FontSize="12" FontWeight="Bold" Margin="20,0"
+                                         Text="{Binding Appartment.Storey}"/>
+                                <TextBox Grid.Row="1" Grid.Column="3" 
+                                         VerticalAlignment="Center" FontSize="12" FontWeight="Bold" Margin="20,0"
+                                         Text="{Binding Appartment.Price}"/>
+
+                            </Grid>
+                            <!--CONTROLS-->
+                            <Grid Grid.Row="2" Width="920" Height="40">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Button Grid.Column="0" HorizontalAlignment="Left"
+                                        Width="120" Height="30" Content="Загрузить все" Margin="20,0"
+                                        Command="{Binding ReloadCommand}">
+                                    <Button.CommandParameter>
+                                        <system:Boolean>True</system:Boolean>
+                                    </Button.CommandParameter>
+                                </Button>
+                                <Button Grid.Column="1" HorizontalAlignment="Right"
+                                        Width="120" Height="30" Content="Вернуться" Margin="20,0"
+                                        Command="{Binding CancelCommand}" CommandParameter="{Binding SelectedDeal.Id}"/>
+                            </Grid>
+                            <!--LIST-->
+                            <Grid Grid.Row="4" Width="920" HorizontalAlignment="Center" Margin="0,30">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <!--HEADER-->
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="20"/>
+                                        <ColumnDefinition Width="200"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="1" Text="Адрес" HorizontalAlignment="Left"/>
+                                    <TextBlock Grid.Column="2" Text="Комнат" HorizontalAlignment="Left"/>
+                                    <TextBlock Grid.Column="3" Text="Площадь" HorizontalAlignment="Left"/>
+                                    <TextBlock Grid.Column="4" Text="Этаж" HorizontalAlignment="Left"/>
+                                    <TextBlock Grid.Column="5" Text="Цена" HorizontalAlignment="Left"/>
+                                </Grid>
+                                <!--ROWS-->
+                                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden" Margin="0,20" Width="920">
+                                    <ItemsControl ItemsSource="{Binding Appartments}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Button Height="30" Margin="0,3"
+                                                        Command="{Binding ElementName=application, Path=DealsVM.SelectAppartmentCommand}" CommandParameter="{Binding}">
+                                                    <Button.Content>
+                                                        <Grid Width="920">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="20"/>
+                                                                <ColumnDefinition Width="200"/>
+                                                                <ColumnDefinition Width="*"/>
+                                                                <ColumnDefinition Width="*"/>
+                                                                <ColumnDefinition Width="*"/>
+                                                                <ColumnDefinition Width="*"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <TextBlock Grid.Column="1" Text="{Binding Address}" HorizontalAlignment="Left"/>
+                                                            <TextBlock Grid.Column="2" Text="{Binding RoomsAmount}" HorizontalAlignment="Left"/>
+                                                            <TextBlock Grid.Column="3" Text="{Binding Area}" HorizontalAlignment="Left"/>
+                                                            <TextBlock Grid.Column="4" Text="{Binding Storey}" HorizontalAlignment="Left"/>
+                                                            <TextBlock Grid.Column="5" Text="{Binding Price}" HorizontalAlignment="Left"/>
+                                                        </Grid>
+                                                    </Button.Content>
+                                                </Button>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                            </Grid>
+                        </Grid>
+                        <!--CLIENT MODAL-->
+                        <Grid Visibility="{Binding ClientVisibility}" Background="Silver">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="1"/>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="1"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="1" Background="Black"/>
+                            <Grid Grid.Row="3" Background="Black"/>
+                            <!--SEARCH-->
+                            <Grid Grid.Row="0" Margin="0,30" Width="920">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0" Grid.Column="0"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Left" Text="Имя : "/>
+                                <TextBlock Grid.Row="1" Grid.Column="0"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Left" Text="Фамилия : "/>
+                                <TextBlock Grid.Row="2" Grid.Column="0"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Left" Text="Отчество : "/>
+                                <TextBlock Grid.Row="0" Grid.Column="2"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Left" Text="Телефон : "/>
+                                
+                                <Button Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2"
+                                        HorizontalAlignment="Right" Margin="20,0"
+                                        Content="Найти похожие" Width="120" Height="30"
+                                        Command="{Binding SearchClientCommand}"/>
+
+                                <TextBox Grid.Row="0" Grid.Column="1" 
+                                         VerticalAlignment="Center" FontSize="12" FontWeight="Bold" Margin="20,0"
+                                         Text="{Binding Client.FirstName}"/>
+                                <TextBox Grid.Row="1" Grid.Column="1" 
+                                         VerticalAlignment="Center" FontSize="12" FontWeight="Bold" Margin="20,0"
+                                         Text="{Binding Client.LastName}"/>
+                                <TextBox Grid.Row="2" Grid.Column="1" 
+                                         VerticalAlignment="Center" FontSize="12" FontWeight="Bold" Margin="20,0"
+                                         Text="{Binding Client.MiddleName}"/>
+                                <TextBox Grid.Row="0" Grid.Column="3" 
+                                         VerticalAlignment="Center" FontSize="12" FontWeight="Bold" Margin="20,0"
+                                         Text="{Binding Client.Phone}"/>
+
+                            </Grid>
+                            <!--CONTROLS-->
+                            <Grid Grid.Row="2" Width="920" Height="40">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Button Grid.Column="0" HorizontalAlignment="Left"
+                                        Width="120" Height="30" Content="Загрузить всеx" Margin="20,0"
+                                        Command="{Binding ReloadCommand}">
+                                    <Button.CommandParameter>
+                                        <system:Boolean>False</system:Boolean>
+                                    </Button.CommandParameter>
+                                </Button>
+                                <Button Grid.Column="1" HorizontalAlignment="Right"
+                                        Width="120" Height="30" Content="Вернуться" Margin="20,0"
+                                        Command="{Binding CancelCommand}" CommandParameter="{Binding SelectedDeal.Id}"/>
+                            </Grid>
+                            <!--LIST-->
+                            <Grid Grid.Row="4" Width="920" HorizontalAlignment="Center" Margin="0,30">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <!--HEADER-->
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="20"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="1" Text="Имя" HorizontalAlignment="Left"/>
+                                    <TextBlock Grid.Column="2" Text="Фамилия" HorizontalAlignment="Left"/>
+                                    <TextBlock Grid.Column="3" Text="Отчество" HorizontalAlignment="Left"/>
+                                    <TextBlock Grid.Column="4" Text="Телефон" HorizontalAlignment="Left"/>
+                                </Grid>
+                                <!--ROWS-->
+                                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden" Margin="0,20" Width="920">
+                                    <ItemsControl ItemsSource="{Binding Clients}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Button Height="30" Margin="0,3"
+                                                        Command="{Binding ElementName=application, Path=DealsVM.SelectClientCommand}" CommandParameter="{Binding}">
+                                                    <Button.Content>
+                                                        <Grid Width="920">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="20"/>
+                                                                <ColumnDefinition Width="*"/>
+                                                                <ColumnDefinition Width="*"/>
+                                                                <ColumnDefinition Width="*"/>
+                                                                <ColumnDefinition Width="*"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <TextBlock Grid.Column="1" Text="{Binding FirstName}" HorizontalAlignment="Left"/>
+                                                            <TextBlock Grid.Column="2" Text="{Binding LastName}" HorizontalAlignment="Left"/>
+                                                            <TextBlock Grid.Column="3" Text="{Binding MiddleName}" HorizontalAlignment="Left"/>
+                                                            <TextBlock Grid.Column="4" Text="{Binding Phone}" HorizontalAlignment="Left"/>
+                                                        </Grid>
+                                                    </Button.Content>
+                                                </Button>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    <!--END NEW DEAL-->
+                </Grid>
+            </Grid>
+        </Grid>
+    </DockPanel>
+</UserControl>

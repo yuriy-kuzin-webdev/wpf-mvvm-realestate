@@ -1,0 +1,32 @@
+﻿<Application x:Class="RealEstateApp.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:RealEstateApp"
+             
+             xmlns:vm="clr-namespace:RealEstateApp.ViewModels"
+             xmlns:v="clr-namespace:RealEstateApp.Views"
+             
+             
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <!--CONTENT-->
+        <DataTemplate DataType="{x:Type vm:WelcomeViewModel}">
+            <v:WelcomeVIew/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:AppartmentsViewModel}">
+            <v:AppartmentsView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ClientsViewModel}">
+            <v:ClientsView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:DealsViewModel}">
+            <v:DealsView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:UsersViewModel}">
+            <v:UsersView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:StatsViewModel}">
+            <v:StatsView/>
+        </DataTemplate>
+    </Application.Resources>
+</Application>
